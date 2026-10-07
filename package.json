@@ -1,0 +1,71 @@
+{
+  "name": "adventures-of-cuetip",
+  "productName": "Adventures of Cuetip",
+  "version": "1.0.0",
+  "description": "Adventures of Cuetip, Vol. 1: Soul Searching. A pixel-art story adventure with training battles, by CuetipLLC.",
+  "author": "CuetipLLC",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "serve": "python3 -m http.server 8095 --directory www",
+    "test": "node tools/smoke.mjs",
+    "icons": "node tools/make_icons.mjs",
+    "desktop": "env -u ELECTRON_RUN_AS_NODE electron .",
+    "web:zip": "mkdir -p dist && rm -f dist/adventures-of-cuetip-web.zip && cd www && zip -qr ../dist/adventures-of-cuetip-web.zip . -x '.*' && echo dist/adventures-of-cuetip-web.zip",
+    "sync": "cap sync",
+    "ios": "cap sync ios && cap open ios",
+    "android": "cap sync android && cap open android",
+    "desktop:mac": "electron-builder --mac",
+    "desktop:win": "electron-builder --win"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.2",
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3",
+    "playwright-core": "^1.63.0"
+  },
+  "build": {
+    "appId": "com.cuetipllc.adventures",
+    "productName": "Adventures of Cuetip",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**",
+      "www/**"
+    ],
+    "mac": {
+      "category": "public.app-category.adventure-games",
+      "icon": "assets/icon-only.png",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "assets/icon-only.png",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "linux": {
+      "icon": "assets/icon-only.png",
+      "target": [
+        "AppImage"
+      ]
+    }
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4"
+  }
+}

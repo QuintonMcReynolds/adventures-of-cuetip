@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Adventures of Cuetip</string>
+    <string name="title_activity_main">Adventures of Cuetip</string>
+    <string name="package_name">com.cuetipllc.adventures</string>
+    <string name="custom_url_scheme">com.cuetipllc.adventures</string>
+</resources>

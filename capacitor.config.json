@@ -1,0 +1,9 @@
+{
+  "appId": "com.cuetipllc.adventures",
+  "appName": "Adventures of Cuetip",
+  "webDir": "www",
+  "backgroundColor": "#07040f",
+  "ios": { "contentInset": "never", "preferredContentMode": "mobile" },
+  "android": { "backgroundColor": "#07040f" },
+  "plugins": { "SplashScreen": { "launchAutoHide": false, "backgroundColor": "#07040f", "showSpinner": false } }
+}
