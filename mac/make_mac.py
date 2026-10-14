@@ -40,7 +40,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         cfg.setURLSchemeHandler(files, forURLScheme: "game")
         cfg.mediaTypesRequiringUserActionForPlayback = []
         let web = WKWebView(frame: .zero, configuration: cfg)
-        web.setValue(false, forKey: "drawsBackground")
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1280, height: 800),
                           styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
         window.title = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Game"
@@ -100,6 +99,8 @@ open(m + '/Game/Game.entitlements', 'w').write('''<?xml version="1.0" encoding="
 <plist version="1.0">
 <dict>
 	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.network.client</key>
 	<true/>
 </dict>
 </plist>
@@ -188,6 +189,7 @@ pbx = f'''// !$*UTF8*$!
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			}}; name = Debug; }};
 		{I['rel_p']} = {{isa = XCBuildConfiguration; buildSettings = {{
 				{pcommon}

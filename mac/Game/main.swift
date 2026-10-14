@@ -32,7 +32,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         cfg.setURLSchemeHandler(files, forURLScheme: "game")
         cfg.mediaTypesRequiringUserActionForPlayback = []
         let web = WKWebView(frame: .zero, configuration: cfg)
-        web.setValue(false, forKey: "drawsBackground")
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1280, height: 800),
                           styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
         window.title = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Game"
