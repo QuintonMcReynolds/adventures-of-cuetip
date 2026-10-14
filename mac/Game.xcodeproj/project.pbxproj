@@ -1,0 +1,106 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+		EBFBFA6D786E9A2F58803C22 = {isa = PBXBuildFile; fileRef = 8E394C0C4F9BD8501E7CA46E; };
+		FEFD2CBAC26DB58EA92A305E = {isa = PBXBuildFile; fileRef = 2445E8D5E2D0E658A4D712F8; };
+		3C613E47A72A19A46E3E24F5 = {isa = PBXBuildFile; fileRef = 266752C43FAC5354D16E5734; };
+		8E394C0C4F9BD8501E7CA46E = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		2445E8D5E2D0E658A4D712F8 = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		99C1CAD86ED0157D6348B86A = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Game.entitlements; sourceTree = "<group>"; };
+		266752C43FAC5354D16E5734 = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../www; sourceTree = SOURCE_ROOT; };
+		551AAFF14A209D827F08A320 = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adventures of Cuetip.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D0B36387D3F8E829C33D139 = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		85008C8F51660A35E4439E43 = {isa = PBXGroup; children = (839F87D76E475C8BEA682A24, 266752C43FAC5354D16E5734, DE9B8DCA25995F3E6EFBE1B6, ); sourceTree = "<group>"; };
+		839F87D76E475C8BEA682A24 = {isa = PBXGroup; children = (8E394C0C4F9BD8501E7CA46E, 2445E8D5E2D0E658A4D712F8, 99C1CAD86ED0157D6348B86A, ); path = Game; sourceTree = "<group>"; };
+		DE9B8DCA25995F3E6EFBE1B6 = {isa = PBXGroup; children = (551AAFF14A209D827F08A320, ); name = Products; sourceTree = "<group>"; };
+		5FC1D3E88B33BC9ADC50C3C7 = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1C0D0232F55E3882D6CEE8B;
+			buildPhases = (45C6F146ED23FE54EEEF6603, 9D0B36387D3F8E829C33D139, EFA9FEF1F6EB13D567703373, );
+			buildRules = ();
+			dependencies = ();
+			name = Game;
+			productName = Game;
+			productReference = 551AAFF14A209D827F08A320;
+			productType = "com.apple.product-type.application";
+		};
+		1779D2FF2A46AA87A951733C = {
+			isa = PBXProject;
+			attributes = { BuildIndependentTargetsInParallel = 1; LastSwiftUpdateCheck = 1500; LastUpgradeCheck = 1500; };
+			buildConfigurationList = 7147FA398E65642A5A5BE09C;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en, Base, );
+			mainGroup = 85008C8F51660A35E4439E43;
+			productRefGroup = DE9B8DCA25995F3E6EFBE1B6;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (5FC1D3E88B33BC9ADC50C3C7, );
+		};
+		EFA9FEF1F6EB13D567703373 = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (FEFD2CBAC26DB58EA92A305E, 3C613E47A72A19A46E3E24F5, ); runOnlyForDeploymentPostprocessing = 0; };
+		45C6F146ED23FE54EEEF6603 = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (EBFBFA6D786E9A2F58803C22, ); runOnlyForDeploymentPostprocessing = 0; };
+		BF837EC3E190AEC666B71914 = {isa = XCBuildConfiguration; buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				SDKROOT = macosx;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			}; name = Debug; };
+		60791F7243164AC26333F6B2 = {isa = XCBuildConfiguration; buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				SDKROOT = macosx;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_COMPILATION_MODE = wholemodule;
+			}; name = Release; };
+		E46CEB6CFE41593CD0562967 = {isa = XCBuildConfiguration; buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Game/Game.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FHP95MJ996;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Adventures of Cuetip";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 CuetipLLC";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cuetipllc.adventures;
+				PRODUCT_NAME = "Adventures of Cuetip";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			}; name = Debug; };
+		2AB8CD381E5B9628B09DA0F6 = {isa = XCBuildConfiguration; buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Game/Game.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FHP95MJ996;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Adventures of Cuetip";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 CuetipLLC";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cuetipllc.adventures;
+				PRODUCT_NAME = "Adventures of Cuetip";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			}; name = Release; };
+		7147FA398E65642A5A5BE09C = {isa = XCConfigurationList; buildConfigurations = (BF837EC3E190AEC666B71914, 60791F7243164AC26333F6B2, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		E1C0D0232F55E3882D6CEE8B = {isa = XCConfigurationList; buildConfigurations = (E46CEB6CFE41593CD0562967, 2AB8CD381E5B9628B09DA0F6, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+	};
+	rootObject = 1779D2FF2A46AA87A951733C;
+}
