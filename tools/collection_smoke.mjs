@@ -1,4 +1,4 @@
-// Smoke test for the collection: main menu -> 18+ gate -> Last Stand (Godot web) -> back -> Vol. 1 and Vol. 2.
+// Smoke test for the collection: main menu -> 18+ gate -> platformer + Last Stand (Godot web) -> Vol. 1 and Vol. 2.
 // Serves www/ over http (Godot's .wasm can't load from file://) and drives Chrome.
 //   node tools/collection_smoke.mjs   (screenshots in tools/shots/)
 import { createRequire } from "module";
@@ -32,7 +32,11 @@ await page.goto(base);
 await wait(500); await shot("01_gate");
 await page.click("#gate-ok"); await wait(300); await shot("02_menu");
 
-await page.click("a.arena");
+await page.click('a[href*="mode=platformer"]');
+await page.waitForSelector("canvas", { timeout: 20000 });
+await wait(9000); await shot("03a_platformer_title");
+await page.goto(base);
+await page.click('a[href*="mode=laststand"]');
 await page.waitForSelector("canvas", { timeout: 20000 });
 await wait(9000); await shot("03_laststand_title");
 // Godot draws its own UI: click "Campaign" (title buttons sit right of centre)

@@ -2,7 +2,7 @@
   "name": "adventures-of-cuetip",
   "productName": "Adventures of Cuetip",
   "version": "1.0.0",
-  "description": "Adventures of Cuetip: Vol. 1, Vol. 2 and the Last Stand arena mode in one game, by CuetipLLC. 18+.",
+  "description": "Adventures of Cuetip: Vol. 1, Vol. 2, the Soul Searching platformer and the Last Stand side mode in one game, by CuetipLLC. 18+.",
   "author": "CuetipLLC",
   "license": "UNLICENSED",
   "private": true,
@@ -19,7 +19,7 @@
     "android": "cap sync android && cap open android",
     "desktop:mac": "electron-builder --mac",
     "desktop:win": "electron-builder --win",
-    "laststand": "tools/build_laststand.sh"
+    "godot": "tools/build_godot.sh"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
