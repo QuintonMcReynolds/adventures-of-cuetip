@@ -316,6 +316,7 @@ const Battle = {
       text.textContent = `${why} Try again?`;
       add("Retry", () => this.retry(false), true);
       add("Retry (easier)", () => this.retry(true));
+      if (Ads.hasReward()) add("▶ Video: retry with +2 shots", async () => { if (await Ads.watchForReward()) { this.retry(false); this.p.shots += 2; this.syncUI(); } });
       add("Skip fight", () => this.end("skip"));
     }
     box.classList.add("show");

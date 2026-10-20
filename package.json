@@ -18,7 +18,8 @@
     "ios": "cap sync ios && cap open ios",
     "android": "cap sync android && cap open android",
     "desktop:mac": "electron-builder --mac",
-    "desktop:win": "electron-builder --win"
+    "desktop:win": "electron-builder --win",
+    "android:sync": "rsync -a --exclude cordova.js --exclude cordova_plugins.js www/ android/app/src/main/assets/public/"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

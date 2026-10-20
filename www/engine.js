@@ -439,6 +439,7 @@ const Game = {
     this.open("chapter-card");
     this.busy = { kind: "chapter", until: performance.now() + (this.skip ? 300 : 2600) };
     this.autosave(1);
+    Ads.chapter();
   },
 
   finishBusy() {
