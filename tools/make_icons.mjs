@@ -5,7 +5,8 @@ import { writeFile, mkdir } from "fs/promises";
 import { pathToFileURL } from "url";
 
 const page = await (await chromium.launch({ channel: "chrome" })).newPage();
-await page.goto(pathToFileURL(new URL("../www/vol1/index.html", import.meta.url).pathname).href);
+// The icon art lives in the Vol. 1 code, kept on the main branch (checked out at ~/adventures-of-cuetip).
+await page.goto(pathToFileURL(`${process.env.HOME}/adventures-of-cuetip/www/index.html`).href);
 await page.waitForFunction(() => window.Game);
 const out = await page.evaluate(() => {
   const icon = (pad) => {

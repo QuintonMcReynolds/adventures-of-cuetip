@@ -1,4 +1,4 @@
-// Smoke test for the collection: main menu -> 18+ gate -> platformer + Last Stand (Godot web) -> Vol. 1 and Vol. 2.
+// Smoke test for the collection: main menu -> 18+ gate -> Soul Searching platformer + Last Stand (Godot web).
 // Serves www/ over http (Godot's .wasm can't load from file://) and drives Chrome.
 //   node tools/collection_smoke.mjs   (screenshots in tools/shots/)
 import { createRequire } from "module";
@@ -46,9 +46,5 @@ await at(0.633, 0.505); await wait(800); await shot("04_campaign_map");
 await at(0.118, 0.672); await wait(800); await shot("05_select");
 await at(0.229, 0.402); await wait(800); await shot("06_story");
 
-await page.goto(base + "vol1/index.html"); await wait(2500); await shot("07_vol1");
-await page.goto(base + "vol2/index.html"); await wait(2500); await shot("08_vol2");
-await page.click("#t-hub"); await wait(800);
-console.log("back at:", page.url());
 console.log(errors.length ? "PAGE ERRORS:\n" + errors.join("\n") : "no page errors");
 await browser.close(); server.close();
