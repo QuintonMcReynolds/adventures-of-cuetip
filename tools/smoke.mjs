@@ -6,7 +6,7 @@ import { createServer } from "http";
 import { readFile, mkdir } from "fs/promises";
 import { extname, join } from "path";
 
-const ROOT = new URL("../www/", import.meta.url).pathname;
+const ROOT = new URL("../www/vol1/", import.meta.url).pathname;
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".png": "image/png", ".ttf": "font/ttf", ".webmanifest": "application/manifest+json" };
 const server = createServer(async (req, res) => {
   const p = join(ROOT, decodeURIComponent(req.url.split("?")[0]).replace(/\/$/, "/index.html"));

@@ -21,7 +21,8 @@ final class Files: NSObject, WKURLSchemeHandler {
             task.didFailWithError(URLError(.fileDoesNotExist)); return
         }
         let types = ["html": "text/html", "js": "text/javascript", "css": "text/css", "png": "image/png",
-                     "ttf": "font/ttf", "json": "application/json", "webmanifest": "application/manifest+json", "txt": "text/plain"]
+                     "ttf": "font/ttf", "json": "application/json", "webmanifest": "application/manifest+json", "txt": "text/plain",
+                     "wasm": "application/wasm", "pck": "application/octet-stream"]
         let mime = types[file.pathExtension.lowercased()] ?? "application/octet-stream"
         task.didReceive(HTTPURLResponse(url: task.request.url!, statusCode: 200, httpVersion: "HTTP/1.1",
                                         headerFields: ["Content-Type": mime, "Content-Length": "\\(data.count)"])!)

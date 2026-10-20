@@ -10,3 +10,6 @@ android/app/src/main/assets/public/
 *.jks
 keystore.properties
 test-results/
+www/laststand/
+tools/shots/
+node_modules

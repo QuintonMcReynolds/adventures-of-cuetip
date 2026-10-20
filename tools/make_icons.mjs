@@ -5,7 +5,7 @@ import { writeFile, mkdir } from "fs/promises";
 import { pathToFileURL } from "url";
 
 const page = await (await chromium.launch({ channel: "chrome" })).newPage();
-await page.goto(pathToFileURL(new URL("../www/index.html", import.meta.url).pathname).href);
+await page.goto(pathToFileURL(new URL("../www/vol1/index.html", import.meta.url).pathname).href);
 await page.waitForFunction(() => window.Game);
 const out = await page.evaluate(() => {
   const icon = (pad) => {

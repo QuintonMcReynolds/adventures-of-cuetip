@@ -2,7 +2,7 @@
   "name": "adventures-of-cuetip",
   "productName": "Adventures of Cuetip",
   "version": "1.0.0",
-  "description": "Adventures of Cuetip, Vol. 1: Soul Searching. A pixel-art story adventure with training battles, by CuetipLLC.",
+  "description": "Adventures of Cuetip: Vol. 1, Vol. 2 and the Last Stand arena mode in one game, by CuetipLLC. 18+.",
   "author": "CuetipLLC",
   "license": "UNLICENSED",
   "private": true,
@@ -10,7 +10,7 @@
   "main": "electron/main.cjs",
   "scripts": {
     "serve": "python3 -m http.server 8095 --directory www",
-    "test": "node tools/smoke.mjs",
+    "test": "node tools/smoke.mjs && node tools/smoke_vol2.mjs && node tools/collection_smoke.mjs",
     "icons": "node tools/make_icons.mjs",
     "desktop": "env -u ELECTRON_RUN_AS_NODE electron .",
     "web:zip": "mkdir -p dist && rm -f dist/adventures-of-cuetip-web.zip && cd www && zip -qr ../dist/adventures-of-cuetip-web.zip . -x '.*' && echo dist/adventures-of-cuetip-web.zip",
@@ -18,7 +18,8 @@
     "ios": "cap sync ios && cap open ios",
     "android": "cap sync android && cap open android",
     "desktop:mac": "electron-builder --mac",
-    "desktop:win": "electron-builder --win"
+    "desktop:win": "electron-builder --win",
+    "laststand": "tools/build_laststand.sh"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

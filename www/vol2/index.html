@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#07040f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Adventures of Cuetip, Vol. 2: The Blight Moon. A pixel-art story adventure with training battles, by CuetipLLC. 18+.">
+  <title>Adventures of Cuetip 2</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <style>
+    @font-face { font-family: "Pixelify"; src: url("fonts/PixelifySans.ttf") format("truetype"); font-weight: 400 700; font-display: block; }
+    :root {
+      --bg: #07040f; --panel: rgba(12, 7, 22, 0.9); --line: #4a3b5c; --line-hi: #9a8cc0;
+      --text: #f1ecfa; --muted: #a99cc8; --accent: #ffb347; --accent2: #2de2ff; --danger: #ff5a6a;
+      --fs: 18px; --sx: 0px; --sy: 0px; --sw: 100vw; --sh: 56vw;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%; background: var(--bg); color: var(--text); overflow: hidden;
+      font-family: "Pixelify", ui-monospace, monospace; font-size: var(--fs);
+      overscroll-behavior: none; touch-action: manipulation;
+      -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+    }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    #stage {
+      position: fixed; left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh);
+      image-rendering: pixelated; image-rendering: crisp-edges; display: block;
+    }
+    #ui { position: fixed; z-index: 2; }
+    body.landscape #ui { left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh); }
+    body.portrait #ui { inset: 0; }
+    body.landscape #lower { display: contents; }
+    body.portrait #lower {
+      position: absolute; left: 12px; right: 12px;
+      top: calc(var(--sy) + var(--sh) + 22px); bottom: calc(env(safe-area-inset-bottom) + 12px);
+      display: flex; flex-direction: column; gap: 10px; overflow-y: auto;
+    }
+
+    /* ---- text box ---- */
+    #textbox {
+      background: var(--panel); border: 2px solid var(--line);
+      box-shadow: inset 0 0 0 2px #07040f, inset 0 0 0 3px #2a1f3a, 0 4px 0 #000;
+      padding: 1.1em 1.2em 0.9em; line-height: 1.45; cursor: pointer;
+    }
+    body.landscape #textbox { position: absolute; left: 3%; right: 3%; bottom: 3.5%; height: 29%; }
+    body.portrait #textbox { position: relative; min-height: 9.5em; flex: 0 0 auto; }
+    #nameplate {
+      position: absolute; top: -0.85em; left: 0.9em; padding: 0.05em 0.6em; font-weight: 700;
+      background: #1a1028; border: 2px solid currentColor; letter-spacing: 0.04em; display: none;
+    }
+    #text { white-space: pre-wrap; }
+    #text em { color: var(--accent); font-style: normal; }
+    #text.narration { color: #d6cfe8; font-style: italic; }
+    .c { opacity: 0; } .c.on { opacity: 1; }
+    #next { position: absolute; right: 0.7em; bottom: 0.4em; color: var(--accent); animation: bob 0.8s steps(2) infinite; display: none; }
+    @keyframes bob { 50% { transform: translateY(3px); } }
+
+    #quick { display: flex; gap: 0.2em; font-size: 0.72em; }
+    body.landscape #quick { position: absolute; right: 3%; bottom: calc(3.5% + 29% + 4px); }
+    body.portrait #quick { justify-content: space-between; flex-wrap: wrap; }
+    #quick button {
+      background: rgba(12, 7, 22, 0.75); border: 1px solid var(--line); padding: 0.25em 0.6em; color: var(--muted);
+    }
+    #quick button.on { color: var(--accent2); border-color: var(--accent2); }
+    body.portrait #quick button { flex: 1; padding: 0.55em 0.2em; }
+
+    #choices { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.5em; }
+    body.landscape #choices { position: absolute; left: 10%; right: 10%; top: 6%; bottom: 36%; }
+    body.portrait #choices { order: -1; }
+    #choices button {
+      width: min(100%, 34em); background: rgba(20, 12, 34, 0.94); border: 2px solid var(--line-hi);
+      padding: 0.55em 1em; text-align: left; box-shadow: 0 3px 0 #000;
+    }
+    #choices button:hover, #choices button:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
+    #choices button::before { content: "\25B8  "; color: var(--accent); }
+
+    #shards { position: absolute; top: 3%; left: 2.5%; display: flex; gap: 0.35em; pointer-events: none; }
+    body.portrait #shards { top: calc(var(--sy) + 8px); left: 12px; }
+    .shard { width: 0.8em; height: 0.8em; transform: rotate(45deg); border: 2px solid var(--line-hi); background: rgba(0,0,0,0.4); }
+    .shard.on { background: #fff2b0; border-color: #ffffff; box-shadow: 0 0 8px #ffd27a; }
+
+    /* ---- full-screen panels ---- */
+    .screen {
+      position: fixed; inset: 0; z-index: 10; display: none; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(5, 3, 10, 0.88); padding: calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);
+      overflow-y: auto; gap: 0.6em; text-align: center; font-size: clamp(14px, 2.6vh, 20px);
+    }
+    .screen.show { display: flex; }
+    .screen.clear { background: transparent; }
+    .panel { width: min(36em, 100%); max-height: 100%; overflow-y: auto; }
+    .screen h1 { margin: 0; font-size: 3em; letter-spacing: 0.06em; color: #fff; text-shadow: 3px 3px 0 #aa0a19, 0 0 18px rgba(45, 226, 255, 0.5); line-height: 1; }
+    .screen h2 { margin: 0 0 0.4em; font-size: 1.4em; color: var(--accent); }
+    .screen p { margin: 0.3em 0; color: var(--muted); line-height: 1.45; }
+    .sub { color: var(--accent2); letter-spacing: 0.15em; font-size: 0.85em; }
+    .menu { display: flex; flex-direction: column; gap: 0.4em; width: min(14em, 100%); margin-top: 0.8em; }
+    .btn {
+      background: #1a1028; border: 2px solid var(--line); padding: 0.5em 1em; box-shadow: 0 3px 0 #000; color: var(--text);
+    }
+    .btn:hover, .btn:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
+    .btn.primary { background: #5a0a1a; border-color: #aa0a19; }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+    .row { display: flex; gap: 0.5em; justify-content: center; flex-wrap: wrap; }
+    .warn { text-align: left; border: 2px solid var(--danger); padding: 1em; background: rgba(40, 6, 14, 0.7); }
+    .warn ul { margin: 0.4em 0 0.4em 1.2em; padding: 0; color: var(--text); line-height: 1.5; }
+    #title-screen .credit { position: absolute; bottom: calc(env(safe-area-inset-bottom) + 10px); font-size: 0.7em; color: #5a4a6a; }
+    input[type=text] {
+      font: inherit; background: #0c0716; color: var(--text); border: 2px solid var(--line-hi); padding: 0.5em; width: min(14em, 100%); text-align: center;
+    }
+    input[type=range] { width: 100%; accent-color: var(--accent); }
+    .setting { display: grid; grid-template-columns: 9em 1fr; gap: 0.6em; align-items: center; text-align: left; margin: 0.6em 0; }
+    .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(14em, 1fr)); gap: 0.5em; width: 100%; }
+    .slot { text-align: left; background: #120a20; border: 2px solid var(--line); padding: 0.55em 0.7em; min-height: 4.2em; }
+    .slot:hover { border-color: var(--accent); }
+    .slot b { color: var(--accent); display: block; font-size: 0.85em; }
+    .slot span { color: var(--muted); font-size: 0.75em; display: block; }
+    #log-list { text-align: left; width: 100%; }
+    #log-list div { padding: 0.35em 0; border-bottom: 1px solid #22182e; line-height: 1.4; }
+    #log-list b { display: block; font-size: 0.8em; }
+    #log-list .choice { color: var(--accent2); }
+    .ending { text-align: left; border: 2px solid var(--line); padding: 0.6em 0.8em; margin: 0.4em 0; background: #120a20; }
+    .ending.got b { color: var(--accent); }
+    .ending span { color: var(--muted); font-size: 0.8em; }
+    #chapter-card h2 { font-size: 2em; color: #fff; text-shadow: 2px 2px 0 #aa0a19; }
+    #rotate { display: none; }
+
+    /* ---- battles ---- */
+    #battle-ui { position: fixed; z-index: 3; display: none; }
+    #battle-ui.show { display: block; }
+    body.landscape #battle-ui { left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh); }
+    body.portrait #battle-ui { inset: 0; }
+    #b-stage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+    body.portrait #b-stage { left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh); }
+    #b-top { position: absolute; left: 2%; right: 2%; top: 3%; display: flex; justify-content: space-between; gap: 1em; font-size: 0.7em; pointer-events: auto; }
+    .bwho { width: 38%; }
+    .bwho.enemy { text-align: right; }
+    .bwho b { display: block; margin-bottom: 0.15em; }
+    .bar { height: 0.7em; background: #1a1028; border: 2px solid #07040f; box-shadow: 0 0 0 1px var(--line); margin-bottom: 0.25em; }
+    .bar i { display: block; height: 100%; width: 100%; transition: width 0.15s; }
+    #b-hp { background: #5af08a; }
+    #b-hs { background: linear-gradient(90deg, #2a1238, #6a2a8a); }
+    #b-hs-wrap.danger { box-shadow: 0 0 0 1px #b07aff, 0 0 8px #b07aff; }
+    #b-ehp { background: #ff5a6a; margin-left: auto; }
+    .bwho small { color: var(--muted); }
+    #b-pause { pointer-events: auto; background: rgba(12,7,22,0.8); border: 1px solid var(--line); color: var(--muted); padding: 0.2em 0.6em; height: fit-content; }
+    #b-goal-count { position: absolute; left: 0; right: 0; top: 17%; text-align: center; font-size: 0.75em; color: var(--accent); text-shadow: 1px 1px 0 #000; }
+    #b-goal {
+      position: absolute; left: 10%; right: 10%; top: 24%; text-align: center; font-size: 0.8em; padding: 0.5em 0.8em;
+      background: rgba(12,7,22,0.88); border: 2px solid var(--accent2); opacity: 0; transition: opacity 0.4s;
+    }
+    #b-goal.show { opacity: 1; }
+    #b-fx { position: absolute; inset: 0; overflow: hidden; }
+    .bfloat { position: absolute; transform: translate(-50%, 0); font-weight: 700; font-size: 0.85em; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000; animation: floatup 0.9s ease-out forwards; white-space: nowrap; }
+    @keyframes floatup { to { transform: translate(-50%, -1.8em); opacity: 0; } }
+    #b-controls { position: absolute; display: grid; gap: 0.35em; pointer-events: auto; }
+    body.landscape #b-controls { left: 2%; right: 2%; bottom: 3%; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+    body.portrait #b-controls { left: 12px; right: 12px; top: calc(var(--sy) + var(--sh) + 16px); grid-template-columns: repeat(4, 1fr); }
+    .bbtn {
+      position: relative; overflow: hidden; background: rgba(26,16,40,0.9); border: 2px solid var(--line-hi); color: var(--text);
+      padding: 0.6em 0.2em; font-size: 0.8em; box-shadow: 0 3px 0 #000; touch-action: none;
+    }
+    body.portrait .bbtn { padding: 1.1em 0.1em; font-size: 0.88em; }
+    .bbtn kbd { display: block; font: inherit; font-size: 0.7em; color: var(--muted); }
+    .bbtn .cd { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); pointer-events: none; }
+    .bbtn.held { border-color: #8fd3ff; background: #1a2a4a; }
+    .bbtn.ready { border-color: #ffd23d; box-shadow: 0 0 10px #ffd23d; }
+    .bbtn[data-move="shot"] { border-color: #7fffc8; }
+    .bbtn[data-move="ward"] { border-color: #fff2b0; }
+    .bbtn[data-move="together"] { border-color: #ffd8ec; }
+    .bbtn[data-move="together"].ready { border-color: #ffd8ec; box-shadow: 0 0 12px #ff8ac8; background: #3a1a3a; }
+    .bbtn:disabled { opacity: 0.4; }
+    #b-result {
+      position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.5em;
+      background: rgba(5,3,10,0.82); text-align: center; pointer-events: auto; padding: 1em;
+    }
+    #b-result.show { display: flex; }
+    #b-result h2 { margin: 0; font-size: 2em; color: #fff; text-shadow: 2px 2px 0 #aa0a19; }
+    #b-result p { margin: 0; color: var(--muted); }
+    #toast {
+      position: fixed; left: 50%; top: 14%; transform: translateX(-50%); z-index: 20; pointer-events: none;
+      background: rgba(12,7,22,0.95); border: 2px solid var(--accent); color: var(--accent); padding: 0.5em 1em; opacity: 0; white-space: nowrap;
+    }
+    #toast.show { animation: toast 2.6s ease forwards; }
+    @keyframes toast { 0% { opacity: 0; transform: translate(-50%, -8px); } 10%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+  </style>
+</head>
+<body class="landscape">
+  <canvas id="stage" width="320" height="180" aria-hidden="true"></canvas>
+
+  <div id="ui">
+    <div id="shards" aria-label="Star seeds recovered"><i class="shard"></i><i class="shard"></i><i class="shard"></i></div>
+    <div id="lower">
+      <div id="choices" role="group" aria-label="Choices"></div>
+      <div id="textbox" role="log" aria-live="polite">
+        <div id="nameplate"></div>
+        <div id="text"></div>
+        <div id="next" aria-hidden="true">&#9660;</div>
+      </div>
+      <div id="quick">
+        <button data-act="log">Log</button>
+        <button data-act="auto">Auto</button>
+        <button data-act="skip">Skip</button>
+        <button data-act="save">Save</button>
+        <button data-act="load">Load</button>
+        <button data-act="menu">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="battle-ui" aria-label="Battle">
+    <div id="b-stage">
+      <div id="b-top">
+        <div class="bwho"><b style="color:#6fb4ff">Cuetip</b><div class="bar"><i id="b-hp"></i></div><div class="bar" id="b-hs-wrap"><i id="b-hs"></i></div><small>HP · HS</small></div>
+        <button id="b-pause" aria-label="Pause">II</button>
+        <div class="bwho enemy"><b id="b-ename"></b><div class="bar"><i id="b-ehp"></i></div></div>
+      </div>
+      <div id="b-goal-count"></div>
+      <div id="b-goal"></div>
+      <div id="b-fx"></div>
+      <div id="b-result"><h2 id="b-result-title"></h2><p id="b-result-text"></p><div class="row" id="b-result-btns"></div></div>
+    </div>
+    <div id="b-controls"></div>
+  </div>
+  <div id="toast" role="status"></div>
+
+  <section class="screen" id="warning-screen" aria-labelledby="warn-h">
+    <div class="panel warn">
+      <h2 id="warn-h">Content warning · 18+</h2>
+      <p>Adventures of Cuetip is intended for adults. It contains:</p>
+      <ul>
+        <li>Fantasy violence and combat</li>
+        <li>A chronic, incurable illness (a curse called HS), medication and injections</li>
+        <li>A cruel villain and dark themes</li>
+        <li>Strong language</li>
+        <li>Flashing light effects (can be turned off in Settings)</li>
+      </ul>
+      <p>There is no sexual content.</p>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="warn-ok">I'm 18 or older. Continue.</button>
+      <button class="btn" id="warn-no">Leave</button>
+    </div>
+  </section>
+
+  <section class="screen clear" id="title-screen" aria-label="Title">
+    <div class="sub">CUETIP PRODUCTIONS PRESENTS</div>
+    <h1>ADVENTURES<br>OF CUETIP</h1>
+    <div class="sub">VOL. 2 · THE BLIGHT MOON</div>
+    <div class="menu">
+      <button class="btn primary" id="t-new">New Game</button>
+      <button class="btn" id="t-continue">Continue</button>
+      <button class="btn" id="t-load">Load</button>
+      <button class="btn" id="t-endings">Endings</button>
+      <button class="btn" id="t-settings">Settings</button>
+      <button class="btn" id="t-credits">Credits</button>
+      <button class="btn" id="t-hub">Main Menu</button>
+    </div>
+    <div class="credit">&copy; CuetipLLC · CueTip Productions · 18+</div>
+  </section>
+
+  <section class="screen" id="name-screen" aria-labelledby="name-h">
+    <h2 id="name-h">What is your name?</h2>
+    <p>It's the one thing you're still sure of.</p>
+    <input type="text" id="name-input" maxlength="14" autocomplete="off" spellcheck="false" aria-label="Your name">
+    <button class="btn primary" id="name-ok">That's me</button>
+  </section>
+
+  <section class="screen" id="slots-screen" aria-labelledby="slots-h">
+    <h2 id="slots-h">Save</h2>
+    <div class="slots" id="slot-list"></div>
+    <button class="btn" data-close>Back</button>
+  </section>
+
+  <section class="screen" id="log-screen" aria-labelledby="log-h">
+    <h2 id="log-h">History</h2>
+    <div class="panel"><div id="log-list"></div></div>
+    <button class="btn" data-close>Back</button>
+  </section>
+
+  <section class="screen" id="settings-screen" aria-labelledby="set-h">
+    <div class="panel">
+      <h2 id="set-h">Settings</h2>
+      <label class="setting">Text speed <input type="range" id="s-speed" min="10" max="120" step="5"></label>
+      <label class="setting">Auto delay <input type="range" id="s-auto" min="0.4" max="4" step="0.2"></label>
+      <label class="setting">Music <input type="range" id="s-music" min="0" max="1" step="0.05"></label>
+      <label class="setting">Sound <input type="range" id="s-sfx" min="0" max="1" step="0.05"></label>
+      <label class="setting">Screen effects <select id="s-fx" class="btn"><option value="1">Shake + flash on</option><option value="0">Off (photosensitive)</option></select></label>
+    </div>
+    <button class="btn" data-close>Back</button>
+  </section>
+
+  <section class="screen" id="endings-screen" aria-labelledby="end-h">
+    <div class="panel">
+      <h2 id="end-h">Endings</h2>
+      <div id="ending-list"></div>
+    </div>
+    <button class="btn" data-close>Back</button>
+  </section>
+
+  <section class="screen" id="credits-screen" aria-labelledby="cred-h">
+    <div class="panel">
+      <h2 id="cred-h">Credits</h2>
+      <p>A CueTip Productions game · &copy; CuetipLLC</p>
+      <p>Cuetip and the story concept by CuetipLLC</p>
+      <p>Code, script, pixel art and music generated in code with Claude Code (Anthropic), directed by CuetipLLC</p>
+      <p>Cuetip character &copy; CuetipLLC</p>
+      <p>Font: Pixelify Sans, © The Pixelify Sans Project Authors (SIL Open Font License 1.1)</p>
+    </div>
+    <button class="btn" data-close>Back</button>
+  </section>
+
+  <section class="screen" id="menu-screen" aria-label="Menu">
+    <h2>Paused</h2>
+    <div class="menu">
+      <button class="btn primary" data-close>Resume</button>
+      <button class="btn" id="m-save">Save</button>
+      <button class="btn" id="m-load">Load</button>
+      <button class="btn" id="m-log">History</button>
+      <button class="btn" id="m-settings">Settings</button>
+      <button class="btn" id="m-title">Quit to Title</button>
+    </div>
+  </section>
+
+  <section class="screen" id="chapter-card" aria-live="polite">
+    <h2 id="chapter-title"></h2>
+    <div class="sub" id="chapter-sub"></div>
+  </section>
+
+  <section class="screen" id="ending-screen" aria-live="polite">
+    <div class="sub" id="ending-kind"></div>
+    <h1 id="ending-title"></h1>
+    <p id="ending-count"></p>
+    <div class="row">
+      <button class="btn primary" id="ending-ok">Return to Title</button>
+    </div>
+  </section>
+
+  <script src="cuetip.js"></script>
+  <script src="pixel.js"></script>
+  <script src="cast.js"></script>
+  <script src="scenes.js"></script>
+  <script src="audio.js"></script>
+  <script src="battle.js"></script>
+  <script src="story.js"></script>
+  <script src="engine.js"></script>
+  <script>
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http") &&
+        !window.Capacitor && !navigator.userAgent.includes("Electron")) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>

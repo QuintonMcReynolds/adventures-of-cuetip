@@ -83,7 +83,12 @@ const Game = {
     this.view.bg = "title";
     requestAnimationFrame((t) => this.frame(t));
     $("ui").style.display = "none";
-    this.open("warning-screen");
+    // Collection build: the main menu already asked the 18+ question.
+    if (store.get("cuetip-18ok", false)) {
+      document.addEventListener("pointerdown", () => Sound.unlock(), { once: true });
+      document.addEventListener("keydown", () => Sound.unlock(), { once: true });
+      this.toTitle();
+    } else this.open("warning-screen");
     this.nativeReady();
   },
 
@@ -120,8 +125,9 @@ const Game = {
   overlayOpen() { return this.overlayStack.some((id) => id !== "chapter-card"); },
 
   bindUI() {
-    $("warn-ok").onclick = () => { Sound.unlock(); this.close("warning-screen"); this.toTitle(); };
-    $("warn-no").onclick = () => { document.body.innerHTML = "<p style='padding:2em;text-align:center'>Take care of yourself.</p>"; };
+    $("warn-ok").onclick = () => { Sound.unlock(); store.set("cuetip-18ok", true); this.close("warning-screen"); this.toTitle(); };
+    $("warn-no").onclick = () => { location.href = "../index.html"; };
+    $("t-hub").onclick = () => { location.href = "../index.html"; };
     $("t-new").onclick = () => this.newGame();
     $("t-continue").onclick = () => { const s = this.latestSave(); if (s) this.loadState(s.state); };
     $("t-load").onclick = () => this.openSlots("load");
