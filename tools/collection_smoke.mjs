@@ -42,7 +42,7 @@ await wait(9000); await shot("03_laststand_title");
 // Godot draws its own UI: click "Campaign" (title buttons sit right of centre)
 const box = await page.locator("canvas").boundingBox();
 const at = (x, y) => page.mouse.click(box.x + box.width * x, box.y + box.height * y);
-await at(0.633, 0.505); await wait(800); await shot("04_campaign_map");
+await at(0.62, 0.453); await wait(800); await shot("04_campaign_map");
 await at(0.118, 0.672); await wait(800); await shot("05_select");
 await at(0.229, 0.402); await wait(800); await shot("06_story");
 
